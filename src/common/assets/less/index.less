@@ -1,0 +1,45 @@
+@import "~antd/dist/antd.less";
+@import url("https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500&display=swap");
+
+@header-height: 0vh;
+
+* {
+  font-family: "Roboto Mono", monospace;
+  box-sizing: border-box;
+}
+
+.special-td {
+  background-color: #333;
+  color: #ffffff;
+  padding: 0;
+  height: 6.5vh;
+  text-align: center;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card-child {
+  padding: 8px;
+  height: 6.5vh;
+  text-overflow: ellipsis;
+  word-wrap: break-word;
+  font-size: 90%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ant-card-body {
+  padding: 0;
+}
+
+.ant-layout-header {
+  height: @header-height;
+  max-height: 100px;
+}
+
+.ant-layout-content {
+  min-height: 100vh - @header-height;
+}
