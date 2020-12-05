@@ -21,19 +21,19 @@ import * as uuid from "uuid";
 
 import { initialSchedule, IItemSchedule } from "../schedule";
 import FormAddSubject from "../modules/app/components/FormAddSubject";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { IRootState } from "../modules";
 
 // cho fake data
-// import { parseJSONToObject } from "../common/utils/parseJSONToObject";
-// import data from "../data.json";
-// import { getCategory, getSubjectList } from "../modules/app/reducers";
+import { parseJSONToObject } from "../common/utils/parseJSONToObject";
+import data from "../data.json";
+import { getCategory, getSubjectList } from "../modules/app/reducers";
 import FormExport from "../modules/app/components/FormExport";
 
 export default function HiAdminPage() {
   const subjectList = useSelector((state: IRootState) => state.app.subjectList);
   const category = useSelector((state: IRootState) => state.app.category);
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
   const scheduleTableRef = useRef<any>();
 
   const [selectedRowKeys, setSelectedRowKeys] = useState<any>([]);
@@ -63,7 +63,11 @@ export default function HiAdminPage() {
           ) {
             // nếu nằm trong điều kiện có thể bỏ môn vào
             if (!scheduleTemp[dayLearning.day][n].content) {
-              temp.push({ ...scheduleTemp[dayLearning.day][n], content: item });
+              temp.push({
+                ...scheduleTemp[dayLearning.day][n],
+                content: item,
+                dayLearning,
+              });
             } else {
               if (scheduleTemp[dayLearning.day][n].content.id !== item.id) {
                 // môn này trùng thời khóa biểu với môn khác
@@ -105,78 +109,105 @@ export default function HiAdminPage() {
   }, [selectedRowKeys, selectedRows]);
 
   // khởi tạo dữ liệu fake
-  // useEffect(() => {
-  //   let result = parseJSONToObject(JSON.stringify(data[0]));
-  //   if (result) {
-  //     dispatch(getSubjectList(result.arr));
-  //     dispatch(
-  //       getCategory({
-  //         categoryID: result.categoryID,
-  //         categoryName: result.categoryName,
-  //       })
-  //     );
-  //   }
-  //   result = parseJSONToObject(JSON.stringify(data[1]));
-  //   if (result) {
-  //     dispatch(getSubjectList(result.arr));
-  //     dispatch(
-  //       getCategory({
-  //         categoryID: result.categoryID,
-  //         categoryName: result.categoryName,
-  //       })
-  //     );
-  //   }
-  //   result = parseJSONToObject(JSON.stringify(data[2]));
-  //   if (result) {
-  //     dispatch(getSubjectList(result.arr));
-  //     dispatch(
-  //       getCategory({
-  //         categoryID: result.categoryID,
-  //         categoryName: result.categoryName,
-  //       })
-  //     );
-  //   }
-  // }, [dispatch]);
+  useEffect(() => {
+    let result = parseJSONToObject(JSON.stringify(data[0]));
+    if (result) {
+      dispatch(getSubjectList(result.arr));
+      dispatch(
+        getCategory({
+          categoryID: result.categoryID,
+          categoryName: result.categoryName,
+        })
+      );
+    }
+    result = parseJSONToObject(JSON.stringify(data[1]));
+    if (result) {
+      dispatch(getSubjectList(result.arr));
+      dispatch(
+        getCategory({
+          categoryID: result.categoryID,
+          categoryName: result.categoryName,
+        })
+      );
+    }
+    result = parseJSONToObject(JSON.stringify(data[2]));
+    if (result) {
+      dispatch(getSubjectList(result.arr));
+      dispatch(
+        getCategory({
+          categoryID: result.categoryID,
+          categoryName: result.categoryName,
+        })
+      );
+    }
+    result = parseJSONToObject(JSON.stringify(data[3]));
+    if (result) {
+      dispatch(getSubjectList(result.arr));
+      dispatch(
+        getCategory({
+          categoryID: result.categoryID,
+          categoryName: result.categoryName,
+        })
+      );
+    }
+  }, [dispatch]);
 
   const renderSchedule = useCallback(() => {
     let content: any = [];
     if (!schedule) return null;
     for (let i = 2; i <= 8; i++) {
       // render 1 thứ
-      let scheduleItem = schedule[i].map((item: any) => {
-        return (
-          <Tooltip
-            key={uuid.v4()}
-            placement="left"
-            color={item.content && item.content.colorTag}
-            title={
-              item.content ? (
-                <div>
-                  <p>Mã: {item.content.id}</p>
-                  <p>Tên: {item.content.name}</p>
-                  <p>Nhóm: {item.content.group}</p>
-                  <p>Lớp: {item.content.classID}</p>
-                  <p>GV: {item.content.nameTeacher}</p>
-                  <p>CS & Phòng: {item.content.roomID}</p>
-                </div>
-              ) : (
-                "Ô trống"
-              )
-            }
-          >
-            <Card className="card-child" key={uuid.v4()}>
-              <p>
-                {item.content ? (
-                  <Tag color={item.content.colorTag}>
-                    {item.content ? item.content.id : null}
-                  </Tag>
-                ) : null}
-              </p>
-            </Card>
-          </Tooltip>
-        );
-      });
+      let scheduleItem = schedule[i].map((item: any, index: any) => {
+        const session: number = index + 1;
 
+        if (item.content !== null) {
+          const start: number = parseInt(item.dayLearning.startClassSession);
+          const total: number = parseInt(item.dayLearning.sessionTotal);
+          if (session === start) {
+            return (
+              <Tooltip
+                key={uuid.v4()}
+                placement="left"
+                color={item.content && item.content.colorTag}
+                title={
+                  <div>
+                    <p>Mã: {item.content.id}</p>
+                    <p>Tên: {item.content.name}</p>
+                    <p>Nhóm: {item.content.group}</p>
+                    <p>Lớp: {item.content.classID}</p>
+                    <p>GV: {item.content.nameTeacher}</p>
+                    <p>CS & Phòng: {item.dayLearning.room}</p>
+                  </div>
+                }
+              >
+                <Card
+                  style={{
+                    backgroundColor: `${item.content.colorTag}`,
+                  }}
+                  className={`card-child-${total}`}
+                  key={uuid.v4()}
+                >
+                  <p className="card-subject-name">
+                    <b>{item.content.id}</b>({item.content.name})
+                  </p>
+                  <p>Nhóm: {item.content.group}</p>
+                </Card>
+              </Tooltip>
+            );
+          } else return null;
+        } else {
+          return (
+            <Tooltip
+              key={uuid.v4()}
+              placement="left"
+              color={item.content && item.content.colorTag}
+              title="Ô trống"
+            >
+              <Card className="card-child-1" key={uuid.v4()} />
+            </Tooltip>
+          );
+        }
+      });
       content.push(
         <Col key={uuid.v4()} style={{ width: "12.5%" }}>
           {scheduleItem}
@@ -242,7 +273,6 @@ export default function HiAdminPage() {
   };
 
   const handleChangeTable = (selectedRowKeysT: any, selectedRowsT: any) => {
-    console.log(selectedRowKeys, selectedRows);
     setSelectedRowKeys(selectedRowKeysT);
     setSelectedRows(selectedRowsT);
   };

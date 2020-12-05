@@ -2,6 +2,7 @@ export interface IDayLearning {
   day: string;
   startClassSession: string;
   sessionTotal: string;
+  room: string;
 }
 
 export interface ISubject {
