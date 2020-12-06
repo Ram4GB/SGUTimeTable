@@ -3,6 +3,7 @@ import cheerio from "cheerio";
 import { v4 } from "uuid";
 import { IDayLearning, ISubject } from "../interface";
 import randomColor from "randomcolor";
+import { parseDate } from "./parseDate";
 
 export const parseJSONToObject = (data: any) => {
   try {
@@ -31,8 +32,7 @@ export const parseJSONToObject = (data: any) => {
           classID: "",
           nameTeacher: "",
           skillNumber: "",
-          totalStudent: "",
-          roomID: "",
+          totalStudentLeft: "",
         };
         // tìm ra những col trong 1 rows
         let cols = rows.eq(i).find("tr td");
@@ -42,8 +42,7 @@ export const parseJSONToObject = (data: any) => {
         subject.classID = cols.eq(7).text().replaceAll(/\s+/g, " ");
         subject.nameTeacher = cols.eq(15).text().replaceAll(/\s+/g, " ");
         subject.skillNumber = cols.eq(5).text().replaceAll(/\s+/g, " ");
-        subject.totalStudent = cols.eq(8).text().replaceAll(/\s+/g, " ");
-        subject.roomID = cols.eq(14).text().replaceAll(/\s+/g, " ");
+        subject.totalStudentLeft = cols.eq(9).text().replaceAll(/\s+/g, " ");
 
         if (i === 0) {
           id = subject.id;
@@ -60,6 +59,8 @@ export const parseJSONToObject = (data: any) => {
         let days: any = cols.eq(11).text().split(" ")[0];
         let startClassSessions: any = cols.eq(12).text().split(" ")[0];
         let sessionTotals: any = cols.eq(13).text().split(" ")[0];
+        let durationDate: any = cols.eq(16).text().split(" ")[0]; // bao gồm từ ngày tới ngày
+        let rooms: any = cols.eq(14).text().split(" ")[0];
 
         days = days.replaceAll("Hai", "2");
         days = days.replaceAll("Ba", "3");
@@ -72,21 +73,31 @@ export const parseJSONToObject = (data: any) => {
         days = days.replaceAll(/\s+/g, " ");
         startClassSessions = startClassSessions.replaceAll(/\s+/g, " ");
         sessionTotals = sessionTotals.replaceAll(/\s+/g, " ");
+        durationDate = durationDate.replaceAll(/\s+/g, " ");
+        rooms = rooms.replaceAll(/\s+/g, " ");
 
         // split string
         days = days.split(" ");
         startClassSessions = startClassSessions.split(" ");
         sessionTotals = sessionTotals.split(" ");
+        durationDate = durationDate.split(" ");
+        rooms = rooms.split(" ");
         // console.log("days sau khi split:", days);
         // console.log("startClassSessions sau khi split:", startClassSessions);
         // console.log("sessionTotals chuỗi sau khi split:", sessionTotals);
 
         let dayLearning: Array<IDayLearning> = [];
         for (let j = 0; j < days.length; j++) {
+          let startDate = parseDate(durationDate[j].split("--")[0]);
+          let endDate = parseDate(durationDate[j].split("--")[1]);
+
           dayLearning.push({
             day: days[j],
             startClassSession: startClassSessions[j],
             sessionTotal: sessionTotals[j],
+            room: rooms[j],
+            startDate,
+            endDate,
           });
         }
         subject.dayLearning = dayLearning;
@@ -103,7 +114,7 @@ export const parseJSONToObject = (data: any) => {
   } catch (error) {
     console.log(error);
     notification.error({
-      message: "Chưa đúng định dạng value|json",
+      message: "Chưa đúng định dạng value || json",
     });
     return null;
   }

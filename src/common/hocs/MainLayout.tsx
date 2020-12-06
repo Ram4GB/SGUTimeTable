@@ -31,6 +31,26 @@ export default function MainLayout(props: IProps) {
           }}
         >
           <p>Ram4GB-SGU</p>
+          <p>
+            Contributors:{" "}
+            <a
+              title="Trương Đình Thiện"
+              href="https://www.facebook.com/profile.php?id=100010290690563"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              TDT
+            </a>
+            |
+            <a
+              title="Tôn Trung Sơn"
+              href="https://www.facebook.com/profile.php?id=100010765894081"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              TTS
+            </a>
+          </p>
         </footer>
       </Layout>
     </Layout>

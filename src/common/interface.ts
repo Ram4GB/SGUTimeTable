@@ -2,6 +2,9 @@ export interface IDayLearning {
   day: string;
   startClassSession: string;
   sessionTotal: string;
+  startDate?: string;
+  endDate?: string;
+  room: string;
 }
 
 export interface ISubject {
@@ -14,8 +17,7 @@ export interface ISubject {
   classID: string;
   nameTeacher: string;
   skillNumber: string;
-  totalStudent: string;
-  roomID: string;
+  totalStudentLeft: string;
 }
 
 export interface ICategory {

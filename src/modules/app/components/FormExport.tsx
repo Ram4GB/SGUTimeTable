@@ -43,7 +43,7 @@ export default function FormExport(props: IProps) {
       <Form.Item name="type" label="Chọn hình thức export" initialValue="0">
         <Radio.Group>
           <Radio value="0">File txt</Radio>
-          <Radio value="1">Ảnh</Radio>
+          {/* <Radio value="1">Ảnh</Radio> */}
           {/* <Radio value="2">Cả 2</Radio> */}
         </Radio.Group>
       </Form.Item>

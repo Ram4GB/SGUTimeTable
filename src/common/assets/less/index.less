@@ -3,6 +3,20 @@
 
 @header-height: 0vh;
 
+each(range(5),{
+  .card-child-@{value} {
+    padding: 5px;
+    height: 50px * @value;
+    text-overflow: ellipsis;
+    word-wrap: break-word;
+    font-size: 90%;
+    color: #ffffff;
+    // display: flex;
+    // align-items: center;
+    // justify-content: center;
+  }
+});
+
 * {
   font-family: "Roboto Mono", monospace;
   box-sizing: border-box;
@@ -12,7 +26,7 @@
   background-color: #333;
   color: #ffffff;
   padding: 0;
-  height: 6.5vh;
+  height: 50px;
   text-align: center;
   font-weight: bold;
   display: flex;
@@ -20,19 +34,30 @@
   justify-content: center;
 }
 
-.card-child {
-  padding: 8px;
-  height: 6.5vh;
-  text-overflow: ellipsis;
-  word-wrap: break-word;
-  font-size: 90%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+// .card-child {
+//   padding: 8px;
+//   min-height: 50px;
+//   text-overflow: ellipsis;
+//   word-wrap: break-word;
+//   font-size: 90%;
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+// }
 
 .ant-card-body {
   padding: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 6;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.card-subject-name {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .ant-layout-header {
