@@ -87,7 +87,7 @@ Mình có tạo 1 thư mục tên là data, các bạn vào từng file copy h�
 
 ### Cài đặt từ thông tin đào tạo chi tiết
 
-<strong>🔥 🔥 [Tại đây](https://github.com/Ram4GB/SGUTimeTable/tree/features/ui_table/Intro)🔥 🔥 </strong>
+<strong>🔥 🔥 [Tại đây](https://github.com/Ram4GB/SGUTimeTable/blob/master/Intro.md)🔥 🔥 </strong>
 
 ## Lời kết
 
